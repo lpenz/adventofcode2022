@@ -1,0 +1,12 @@
+#!/bin/bash
+
+day="${1?day not specified}"
+
+set -e -x
+
+cp -R day00-template "$day"
+mv "$day/src/bin/day00a.rs" "$day/src/bin/${day}a.rs"
+mv "$day/src/bin/day00b.rs" "$day/src/bin/${day}b.rs"
+find "$day" -type f -exec sed -i "s@day00@${day}@g" {} +
+sed -i "s@^\\]@    \"${day}\",\\n]@" Cargo.toml
+cargo test -p "$day"

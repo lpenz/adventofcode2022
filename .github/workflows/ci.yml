@@ -1,0 +1,15 @@
+---
+name: CI
+on: [ workflow_dispatch, push, pull_request ]
+jobs:
+  omnilint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - uses: docker://lpenz/omnilint:0.5.1
+  rust:
+    uses: lpenz/ghworkflow-rust/.github/workflows/rust.yml@v0.13.0
+    with:
+      coveralls: true
+      publish_cratesio: false
+      publish_github_release: false
