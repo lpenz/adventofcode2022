@@ -2,5 +2,6 @@
 members = [
     "day00-template",
     "day01",
+    "day02",
 ]
 
