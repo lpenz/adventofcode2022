@@ -35,13 +35,13 @@ pub mod parser {
 
     use super::*;
 
-    pub fn calories(input: &str) -> IResult<&str, Calories> {
+    fn calories(input: &str) -> IResult<&str, Calories> {
         let (input, calories) = character::u32(input)?;
         let (input, _) = newline(input)?;
         Ok((input, calories))
     }
 
-    pub fn elf(input: &str) -> IResult<&str, Vec<Calories>> {
+    fn elf(input: &str) -> IResult<&str, Vec<Calories>> {
         let (input, elf) = multi::many1(calories)(input)?;
         Ok((input, elf))
     }

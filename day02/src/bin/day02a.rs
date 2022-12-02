@@ -7,31 +7,18 @@ use std::io::{stdin, BufRead};
 
 use day02::*;
 
-fn round_beat_score(p1: Play, p2: Play) -> u32 {
-    if p1 == p2 {
-        3
-    } else if p1 as u32 % 3 == (p2 as u32 + 1) % 3 {
-        6
-    } else {
-        0
+fn strat2play(strat: Strat) -> Play {
+    match strat {
+        Strat::X => Play::Rock,
+        Strat::Y => Play::Paper,
+        Strat::Z => Play::Scissors,
     }
 }
 
-#[test]
-fn test_round_score() {
-    for play in ALLPLAYS {
-        assert_eq!(round_beat_score(play, play), 3);
-    }
-    assert_eq!(round_beat_score(Play::Paper, Play::Rock), 6);
-    assert_eq!(round_beat_score(Play::Rock, Play::Scissors), 6);
-    assert_eq!(round_beat_score(Play::Scissors, Play::Paper), 6);
-    assert_eq!(round_beat_score(Play::Rock, Play::Paper), 0);
-    assert_eq!(round_beat_score(Play::Scissors, Play::Rock), 0);
-    assert_eq!(round_beat_score(Play::Paper, Play::Scissors), 0);
-}
-
-fn round_score(round: &(Play, Play)) -> u32 {
-    round.1 as u32 + round_beat_score(round.1, round.0)
+fn round_score(round: &(Play, Strat)) -> u32 {
+    let p1 = round.0;
+    let p2 = strat2play(round.1);
+    p2.score() + round_beat_score(p2, p1)
 }
 
 fn process(bufin: impl BufRead) -> Result<u32> {
