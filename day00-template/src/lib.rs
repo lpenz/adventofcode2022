@@ -17,11 +17,11 @@ pub mod parser {
     use nom::IResult;
     use std::io::BufRead;
 
-    pub fn num(input: &str) -> IResult<&str, u32> {
+    fn num(input: &str) -> IResult<&str, u32> {
         character::u32(input)
     }
 
-    pub fn line(input: &str) -> IResult<&str, u32> {
+    fn line(input: &str) -> IResult<&str, u32> {
         let (input, num) = num(input)?;
         let (input, _) = character::newline(input)?;
         Ok((input, num))
