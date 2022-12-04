@@ -2,9 +2,9 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-use anyhow::anyhow;
-use anyhow::Error;
-use anyhow::Result;
+use eyre::eyre;
+use eyre::Error;
+use eyre::Result;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Item(char);
@@ -26,7 +26,7 @@ impl TryFrom<char> for Item {
         if c.is_ascii_alphabetic() {
             Ok(Item(c))
         } else {
-            Err(anyhow!("Invalid item {}", c))
+            Err(eyre!("Invalid item {}", c))
         }
     }
 }
@@ -42,8 +42,8 @@ CrZsJsPPZsGzwwsLwLmpwMDw
 ";
 
 pub mod parser {
-    use anyhow::anyhow;
-    use anyhow::Result;
+    use eyre::eyre;
+    use eyre::Result;
     use nom::character::complete as character;
     use nom::combinator;
     use nom::multi;
@@ -68,9 +68,7 @@ pub mod parser {
         let mut input = String::default();
         bufin.read_to_string(&mut input)?;
         let result = combinator::all_consuming(multi::many1(rucksack))(&input);
-        Ok(result
-            .map_err(|e| anyhow!("error reading input: {:?}", e))?
-            .1)
+        Ok(result.map_err(|e| eyre!("error reading input: {:?}", e))?.1)
     }
 }
 

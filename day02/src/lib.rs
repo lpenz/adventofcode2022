@@ -3,7 +3,7 @@
 // file 'LICENSE', which is part of this source code package.
 
 #[cfg(test)]
-use anyhow::Result;
+use eyre::Result;
 
 // Play //
 
@@ -81,8 +81,8 @@ fn test_round_beat_score() {
 // Parsing //
 
 pub mod parser {
-    use anyhow::anyhow;
-    use anyhow::Result;
+    use eyre::eyre;
+    use eyre::Result;
     use nom::character::complete as character;
     use nom::combinator;
     use nom::multi;
@@ -113,9 +113,7 @@ pub mod parser {
         let mut input = String::default();
         bufin.read_to_string(&mut input)?;
         let result = combinator::all_consuming(multi::many1(entry))(&input);
-        Ok(result
-            .map_err(|e| anyhow!("error reading input: {:?}", e))?
-            .1)
+        Ok(result.map_err(|e| eyre!("error reading input: {:?}", e))?.1)
     }
 }
 

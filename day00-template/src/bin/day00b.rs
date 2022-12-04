@@ -2,8 +2,8 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-// use anyhow::anyhow;
-use anyhow::Result;
+// use eyre::eyre;
+use eyre::Result;
 use std::io::{stdin, BufRead};
 
 use day00::*;
