@@ -12,10 +12,10 @@ pub struct Item(char);
 impl Item {
     pub fn priority(&self) -> u8 {
         if self.0.is_ascii_lowercase() {
-            self.0 as u8 - 'a' as u8 + 1
+            self.0 as u8 - b'a' + 1
         } else {
             // uppercase
-            self.0 as u8 - 'A' as u8 + 27
+            self.0 as u8 - b'A' + 27
         }
     }
 }
