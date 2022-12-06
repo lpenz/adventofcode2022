@@ -2,7 +2,7 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-#[cfg(test)]
+use eyre::eyre;
 use eyre::Result;
 
 pub const EXAMPLE: &str = "mjqjpqmgbljsphdztnvjfqwrcgsmlb\n";
@@ -21,6 +21,19 @@ pub mod parser {
         input.pop();
         Ok(input)
     }
+}
+
+pub fn solve<const WINDOW_SIZE: usize>(input: String) -> Result<usize> {
+    let binput = input.as_bytes();
+    for istart in 0..binput.len() {
+        let mut slice: [u8; WINDOW_SIZE] = binput[istart..(istart + WINDOW_SIZE)].try_into()?;
+        slice.sort();
+        let duplicate = (1..slice.len()).any(|i| slice[i - 1] == slice[i]);
+        if !duplicate {
+            return Ok(istart + WINDOW_SIZE);
+        }
+    }
+    Err(eyre!("marker not found"))
 }
 
 #[test]

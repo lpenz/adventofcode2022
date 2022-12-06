@@ -9,16 +9,16 @@ use day06::*;
 
 fn process(bufin: impl BufRead) -> Result<usize> {
     let input = parser::parse(bufin)?;
-    solve::<4>(input)
+    solve::<14>(input)
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 7);
-    assert_eq!(process(EXAMPLE2.as_bytes())?, 5);
-    assert_eq!(process(EXAMPLE3.as_bytes())?, 6);
-    assert_eq!(process(EXAMPLE4.as_bytes())?, 10);
-    assert_eq!(process(EXAMPLE5.as_bytes())?, 11);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 19);
+    assert_eq!(process(EXAMPLE2.as_bytes())?, 23);
+    assert_eq!(process(EXAMPLE3.as_bytes())?, 23);
+    assert_eq!(process(EXAMPLE4.as_bytes())?, 29);
+    assert_eq!(process(EXAMPLE5.as_bytes())?, 26);
     Ok(())
 }
 
