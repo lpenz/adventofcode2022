@@ -2,8 +2,9 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-#[cfg(test)]
+use eyre::eyre;
 use eyre::Result;
+use std::collections::HashMap;
 
 pub const EXAMPLE: &str = "$ cd /
 $ ls
@@ -29,6 +30,8 @@ $ ls
 5626152 d.ext
 7214296 k
 ";
+
+// Input structures:
 
 #[derive(Debug, Clone)]
 pub enum Entry {
@@ -119,4 +122,49 @@ fn test() -> Result<()> {
     let input = parser::parse(EXAMPLE.as_bytes())?;
     assert_eq!(input.len(), 10);
     Ok(())
+}
+
+// Recursive entries
+
+#[derive(Debug)]
+pub struct RecEntry {
+    pub entry: Entry,
+    pub children: HashMap<String, RecEntry>,
+}
+
+impl From<&Entry> for RecEntry {
+    fn from(entry: &Entry) -> Self {
+        Self {
+            entry: entry.clone(),
+            children: HashMap::default(),
+        }
+    }
+}
+
+pub fn rec_builder(recentry: &mut RecEntry, cmds: &[Cmd], mut icmd: usize) -> Result<usize> {
+    while icmd < cmds.len() {
+        let cmd = &cmds[icmd];
+        match cmd {
+            Cmd::Ls(ref entries) => {
+                recentry.children = entries
+                    .iter()
+                    .map(|entry| (entry.name().to_string(), RecEntry::from(entry)))
+                    .collect();
+                icmd += 1;
+            }
+            Cmd::Cd(ref dir) => {
+                icmd += 1;
+                if dir == ".." {
+                    return Ok(icmd);
+                } else {
+                    let recentry_child = recentry
+                        .children
+                        .get_mut(dir)
+                        .ok_or_else(|| eyre!("could not find dir {}", dir))?;
+                    icmd = rec_builder(recentry_child, cmds, icmd)?;
+                }
+            }
+        }
+    }
+    Ok(icmd)
 }
