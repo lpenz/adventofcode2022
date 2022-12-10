@@ -9,12 +9,13 @@ use day09::*;
 
 fn process(bufin: impl BufRead) -> Result<usize> {
     let input = parser::parse(bufin)?;
-    process_moves::<2>(&input)
+    process_moves::<10>(&input)
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 13);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 1);
+    assert_eq!(process(EXAMPLE2.as_bytes())?, 36);
     Ok(())
 }
 

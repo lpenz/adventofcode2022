@@ -2,10 +2,13 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-#[cfg(test)]
 use eyre::Result;
+use std::collections::HashSet;
+
+use sqrid::qaqr::qaqr_resolve;
 
 // pub type Sqrid = sqrid::sqrid_create!(6, 5, true);
+// pub type Sqrid = sqrid::sqrid_create!(26, 21, true);
 pub type Sqrid = sqrid::sqrid_create!(1000, 1000, true);
 pub type Qa = sqrid::qa_create!(Sqrid);
 pub type Qr = sqrid::qr::Qr;
@@ -26,6 +29,16 @@ R 4
 D 1
 L 5
 R 2
+";
+
+pub const EXAMPLE2: &str = "R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20
 ";
 
 pub mod parser {
@@ -73,5 +86,52 @@ pub mod parser {
 #[test]
 fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 8);
+    assert_eq!(parser::parse(EXAMPLE2.as_bytes())?.len(), 8);
     Ok(())
+}
+
+pub fn process_moves<const KNOTS: usize>(input: &[Mv]) -> Result<usize> {
+    let mut knots = [Qa::try_from((Sqrid::WIDTH / 2, Sqrid::HEIGHT / 2))?; KNOTS];
+    let mut visited = HashSet::<Qa>::default();
+    visited.insert(knots[0]);
+    for mv in input {
+        for _ in 0..mv.dist {
+            knots[0] = qaqr_resolve(knots[0], mv.qr)?;
+            for i in 1..KNOTS {
+                if knots[i - 1] != knots[i]
+                    && !Qr::iter::<true>().any(|d| knots[i - 1] + d == Some(knots[i]))
+                {
+                    let target = knots[i - 1].tuple();
+                    let me = knots[i].tuple();
+                    // Rules:
+                    let qr = if me.0 == target.0 {
+                        if me.1 > target.1 {
+                            Qr::N
+                        } else {
+                            Qr::S
+                        }
+                    } else if me.1 == target.1 {
+                        if me.0 > target.0 {
+                            Qr::W
+                        } else {
+                            Qr::E
+                        }
+                    } else if me.0 < target.0 {
+                        if me.1 < target.1 {
+                            Qr::SE
+                        } else {
+                            Qr::NE
+                        }
+                    } else if me.1 < target.1 {
+                        Qr::SW
+                    } else {
+                        Qr::NW
+                    };
+                    knots[i] = (knots[i] + qr).unwrap();
+                }
+                visited.insert(knots[KNOTS - 1]);
+            }
+        }
+    }
+    Ok(visited.len())
 }
