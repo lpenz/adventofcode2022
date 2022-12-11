@@ -217,3 +217,42 @@ fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 3);
     Ok(())
 }
+
+// State and processing
+
+#[derive(Debug)]
+pub struct State {
+    pub x: i32,
+    pub cycle: u32,
+    pub current: Instr,
+    pub due: u32,
+}
+
+impl Default for State {
+    fn default() -> Self {
+        Self {
+            x: 1,
+            cycle: 1,
+            current: Default::default(),
+            due: 0,
+        }
+    }
+}
+
+impl State {
+    pub fn load(&mut self, instr: Instr) {
+        assert_eq!(self.due, 0);
+        self.due = instr.cost();
+        self.current = instr;
+    }
+    pub fn tick(&mut self) {
+        self.cycle += 1;
+        self.due -= 1;
+        if self.due == 0 {
+            match self.current {
+                Instr::Noop => {}
+                Instr::Addx(v) => self.x += v,
+            }
+        }
+    }
+}

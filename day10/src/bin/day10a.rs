@@ -7,43 +7,6 @@ use std::io::{stdin, BufRead};
 
 use day10::*;
 
-#[derive(Debug)]
-pub struct State {
-    x: i32,
-    cycle: u32,
-    current: Instr,
-    due: u32,
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self {
-            x: 1,
-            cycle: 1,
-            current: Default::default(),
-            due: 0,
-        }
-    }
-}
-
-impl State {
-    fn load(&mut self, instr: Instr) {
-        assert_eq!(self.due, 0);
-        self.due = instr.cost();
-        self.current = instr;
-    }
-    fn tick(&mut self) {
-        self.cycle += 1;
-        self.due -= 1;
-        if self.due == 0 {
-            match self.current {
-                Instr::Noop => {}
-                Instr::Addx(v) => self.x += v,
-            }
-        }
-    }
-}
-
 fn process(bufin: impl BufRead) -> Result<i32> {
     let input = parser::parse(bufin)?;
     let mut state = State::default();
