@@ -2,10 +2,8 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-use std::collections::VecDeque;
-
-#[cfg(test)]
 use eyre::Result;
+use std::collections::VecDeque;
 
 pub const EXAMPLE: &str = "Monkey 0:
   Starting items: 79, 98
@@ -36,17 +34,17 @@ Monkey 3:
     If false: throw to monkey 1
 ";
 
-pub type Item = i32;
+pub type Worry = u64;
 
 #[derive(Debug)]
 pub enum Op {
-    Add(i32),
-    Mul(i32),
+    Add(Worry),
+    Mul(Worry),
     Square,
 }
 
 impl Op {
-    pub fn apply(&self, arg: i32) -> i32 {
+    pub fn apply(&self, arg: Worry) -> Worry {
         match self {
             Op::Add(val) => arg + val,
             Op::Mul(val) => arg * val,
@@ -58,9 +56,9 @@ impl Op {
 #[derive(Debug)]
 pub struct Monkey {
     pub id: usize,
-    pub items: VecDeque<Item>,
+    pub items: VecDeque<Worry>,
     pub op: Op,
-    pub test: i32,
+    pub test: Worry,
     pub monkey_true: usize,
     pub monkey_false: usize,
     pub inspected: u32,
@@ -81,14 +79,14 @@ pub mod parser {
 
     fn op_add(input: &str) -> IResult<&str, Op> {
         let (input, _) = bytes::tag("+ ")(input)?;
-        let (input, value) = character::i32(input)?;
-        Ok((input, Op::Add(value)))
+        let (input, value) = character::u32(input)?;
+        Ok((input, Op::Add(Worry::from(value))))
     }
 
     fn op_mul(input: &str) -> IResult<&str, Op> {
         let (input, _) = bytes::tag("* ")(input)?;
-        let (input, value) = character::i32(input)?;
-        Ok((input, Op::Mul(value)))
+        let (input, value) = character::u32(input)?;
+        Ok((input, Op::Mul(Worry::from(value))))
     }
 
     fn op_square(input: &str) -> IResult<&str, Op> {
@@ -104,11 +102,11 @@ pub mod parser {
         let (input, _) = bytes::tag("Monkey ")(input)?;
         let (input, id) = character::u32(input)?;
         let (input, _) = bytes::tag(":\n  Starting items: ")(input)?;
-        let (input, items) = multi::separated_list1(bytes::tag(", "), character::i32)(input)?;
+        let (input, items) = multi::separated_list1(bytes::tag(", "), character::u32)(input)?;
         let (input, _) = bytes::tag("\n  Operation: new = old ")(input)?;
         let (input, op) = op(input)?;
         let (input, _) = bytes::tag("\n  Test: divisible by ")(input)?;
-        let (input, test) = character::i32(input)?;
+        let (input, test) = character::u32(input)?;
         let (input, _) = bytes::tag("\n    If true: throw to monkey ")(input)?;
         let (input, monkey_true) = character::u32(input)?;
         let (input, _) = bytes::tag("\n    If false: throw to monkey ")(input)?;
@@ -118,9 +116,9 @@ pub mod parser {
             input,
             Monkey {
                 id: id as usize,
-                items: items.into_iter().collect(),
+                items: items.into_iter().map(Worry::from).collect(),
                 op,
-                test,
+                test: Worry::from(test),
                 monkey_true: monkey_true as usize,
                 monkey_false: monkey_false as usize,
                 inspected: 0,
@@ -141,4 +139,32 @@ pub mod parser {
 fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 4);
     Ok(())
+}
+
+pub fn monkey_business<const ROUNDS: usize, const DIVIDER: Worry>(
+    mut monkeys: Vec<Monkey>,
+) -> Result<u64> {
+    let module: Worry = monkeys.iter().map(|m| m.test).product();
+    for _round in 0..ROUNDS {
+        for i in 0..monkeys.len() {
+            while let Some(item) = monkeys[i].items.pop_front() {
+                monkeys[i].inspected += 1;
+                let worry = (monkeys[i].op.apply(item) / DIVIDER) % module;
+                let target_monkey = if worry % monkeys[i].test == 0 {
+                    monkeys[i].monkey_true
+                } else {
+                    monkeys[i].monkey_false
+                };
+                monkeys[target_monkey].items.push_back(worry);
+            }
+        }
+    }
+    let mut inspections = monkeys.iter().map(|m| m.inspected).collect::<Vec<_>>();
+    inspections.sort();
+    Ok(inspections
+        .into_iter()
+        .rev()
+        .take(2)
+        .map(|v| v as u64)
+        .product())
 }

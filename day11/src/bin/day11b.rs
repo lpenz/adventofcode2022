@@ -9,12 +9,12 @@ use day11::*;
 
 fn process(bufin: impl BufRead) -> Result<u64> {
     let monkeys = parser::parse(bufin)?;
-    monkey_business::<20, 3>(monkeys)
+    monkey_business::<10000, 1>(monkeys)
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 10605);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 2713310158);
     Ok(())
 }
 
