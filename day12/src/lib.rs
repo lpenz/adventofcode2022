@@ -2,8 +2,13 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-#[cfg(test)]
 use eyre::Result;
+
+pub use sqrid::Qr;
+
+pub type Sqrid = sqrid::sqrid_create!(143, 41, false);
+pub type Qa = sqrid::qa_create!(Sqrid);
+pub type Grid = sqrid::grid_create!(Sqrid, char);
 
 pub const EXAMPLE: &str = "Sabqponm
 abcryxxl
@@ -43,4 +48,25 @@ pub mod parser {
 fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 5);
     Ok(())
+}
+
+pub fn vecs2grid(input: Vec<Vec<Cell>>) -> Result<(Qa, Qa, Grid)> {
+    let mut grid = Grid::repeat(char::from(b'~'));
+    let mut src = Qa::default();
+    let mut dst = Qa::default();
+    for (y, line) in input.iter().enumerate() {
+        for (x, cell) in line.iter().enumerate() {
+            let qa = Qa::try_from((x as u16, y as u16))?;
+            if line[x] == 'S' {
+                src = qa;
+                grid[qa] = 'a';
+            } else if line[x] == 'E' {
+                dst = qa;
+                grid[qa] = 'z';
+            } else {
+                grid[qa] = *cell;
+            }
+        }
+    }
+    Ok((src, dst, grid))
 }

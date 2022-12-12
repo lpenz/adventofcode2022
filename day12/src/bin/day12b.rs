@@ -7,9 +7,9 @@ use std::io::{stdin, BufRead};
 
 use day12::*;
 
-pub fn mvok(grid: &Grid, src: Qa, qr: Qr) -> Option<Qa> {
+pub fn back_mvok(grid: &Grid, src: Qa, qr: Qr) -> Option<Qa> {
     let dst = (src + qr)?;
-    if (grid[dst] as u8) <= (grid[src] as u8) + 1 {
+    if (grid[src] as u8) <= (grid[dst] as u8) + 1 {
         Some(dst)
     } else {
         None
@@ -18,14 +18,18 @@ pub fn mvok(grid: &Grid, src: Qa, qr: Qr) -> Option<Qa> {
 
 fn process(bufin: impl BufRead) -> Result<usize> {
     let input = parser::parse(bufin)?;
-    let (src, dst, grid) = vecs2grid(input)?;
-    let path = Sqrid::bfs_path(|qa, qr| mvok(&grid, qa, qr), &src, |qa| qa == dst)?;
+    let (_, dst, grid) = vecs2grid(input)?;
+    let path = Sqrid::bfs_path(
+        |qa, qr| back_mvok(&grid, qa, qr),
+        &dst,
+        |qa| grid[qa] == 'a',
+    )?;
     Ok(path.1.len())
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 31);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 29);
     Ok(())
 }
 
