@@ -1,0 +1,108 @@
+// Copyright (C) 2022 Leandro Lisboa Penz <lpenz@lpenz.org>
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of this source code package.
+
+use eyre::eyre;
+use eyre::Result;
+use std::cmp::Ordering::{Equal, Greater, Less};
+
+pub use sqrid::Qr;
+
+pub const EXAMPLE: &str = "498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9
+";
+
+pub type Sqrid = sqrid::sqrid_create!(550, 550, false);
+pub type Qa = sqrid::qa_create!(Sqrid);
+pub type Grid = sqrid::grid_create!(Sqrid, Cell);
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub enum Cell {
+    #[default]
+    Empty,
+    Rock,
+    Sand,
+}
+
+impl From<Cell> for char {
+    fn from(cell: Cell) -> char {
+        match cell {
+            Cell::Empty => '.',
+            Cell::Rock => '#',
+            Cell::Sand => 'o',
+        }
+    }
+}
+
+pub mod parser {
+    use eyre::eyre;
+    use eyre::Result;
+    use nom::bytes::complete as bytes;
+    use nom::character::complete as character;
+    use nom::combinator;
+    use nom::multi;
+    use nom::IResult;
+    use std::io::BufRead;
+
+    use super::*;
+
+    fn qa(input: &str) -> IResult<&str, Qa> {
+        let (input, x) = character::u16(input)?;
+        let (input, _) = bytes::tag(",")(input)?;
+        let (input, y) = character::u16(input)?;
+        let qa = Qa::try_from((x, y)).unwrap();
+        Ok((input, qa))
+    }
+
+    fn path(input: &str) -> IResult<&str, Vec<Qa>> {
+        let (input, qas) = multi::separated_list1(bytes::tag(" -> "), qa)(input)?;
+        let (input, _) = character::newline(input)?;
+        Ok((input, qas))
+    }
+
+    pub fn parse(mut bufin: impl BufRead) -> Result<Vec<Vec<Qa>>> {
+        let mut input = String::default();
+        bufin.read_to_string(&mut input)?;
+        let result = combinator::all_consuming(multi::many1(path))(&input);
+        Ok(result.map_err(|e| eyre!("error reading input: {:?}", e))?.1)
+    }
+}
+
+#[test]
+fn test() -> Result<()> {
+    assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 2);
+    Ok(())
+}
+
+pub fn direction(src: &Qa, dst: &Qa) -> Option<Qr> {
+    let tsrc = src.tuple();
+    let tdst = dst.tuple();
+    match (tsrc.0.cmp(&tdst.0), tsrc.1.cmp(&tdst.1)) {
+        (Equal, Equal) => None,
+        (Equal, Greater) => Some(Qr::N),
+        (Less, Greater) => Some(Qr::NE),
+        (Less, Equal) => Some(Qr::E),
+        (Less, Less) => Some(Qr::SE),
+        (Equal, Less) => Some(Qr::S),
+        (Greater, Less) => Some(Qr::SW),
+        (Greater, Equal) => Some(Qr::W),
+        (Greater, Greater) => Some(Qr::NW),
+    }
+}
+
+pub fn grid_from_paths(paths: Vec<Vec<Qa>>) -> Result<Box<Grid>> {
+    let mut g = Box::new(Grid::default());
+    for path in paths {
+        for (i, dst) in path.iter().enumerate().skip(1) {
+            let mut qa = path[i - 1];
+            g[qa] = Cell::Rock;
+            while let Some(qr) = direction(&qa, dst) {
+                qa = (qa + qr).ok_or_else(|| {
+                    eyre!("out-of-bounds, qa {:?}, qr {:?}, dst {:?}", qa, qr, dst)
+                })?;
+                g[qa] = Cell::Rock;
+            }
+        }
+    }
+    Ok(g)
+}
