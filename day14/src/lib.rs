@@ -12,7 +12,7 @@ pub const EXAMPLE: &str = "498,4 -> 498,6 -> 496,6
 503,4 -> 502,4 -> 502,9 -> 494,9
 ";
 
-pub type Sqrid = sqrid::sqrid_create!(550, 550, false);
+pub type Sqrid = sqrid::sqrid_create!(1000, 500, false);
 pub type Qa = sqrid::qa_create!(Sqrid);
 pub type Grid = sqrid::grid_create!(Sqrid, Cell);
 
@@ -90,19 +90,51 @@ pub fn direction(src: &Qa, dst: &Qa) -> Option<Qr> {
     }
 }
 
+pub fn lay_rock(g: &mut Grid, src: &Qa, dst: &Qa) -> Result<()> {
+    let mut qa = *src;
+    g[qa] = Cell::Rock;
+    while let Some(qr) = direction(&qa, dst) {
+        qa = (qa + qr)
+            .ok_or_else(|| eyre!("out-of-bounds, qa {:?}, qr {:?}, dst {:?}", qa, qr, dst))?;
+        g[qa] = Cell::Rock;
+    }
+    Ok(())
+}
+
 pub fn grid_from_paths(paths: Vec<Vec<Qa>>) -> Result<Box<Grid>> {
     let mut g = Box::new(Grid::default());
     for path in paths {
         for (i, dst) in path.iter().enumerate().skip(1) {
-            let mut qa = path[i - 1];
-            g[qa] = Cell::Rock;
-            while let Some(qr) = direction(&qa, dst) {
-                qa = (qa + qr).ok_or_else(|| {
-                    eyre!("out-of-bounds, qa {:?}, qr {:?}, dst {:?}", qa, qr, dst)
-                })?;
-                g[qa] = Cell::Rock;
-            }
+            lay_rock(&mut g, &path[i - 1], dst)?;
         }
     }
     Ok(g)
+}
+
+pub fn grid_y_max_rock(g: &Grid) -> Result<u16> {
+    g.iter_qa()
+        .filter_map(|(qa, &cell)| {
+            if cell == Cell::Rock {
+                Some(qa.tuple().1)
+            } else {
+                None
+            }
+        })
+        .max()
+        .ok_or_else(|| eyre!("could not find max y"))
+}
+
+pub fn sand_fall(grid: &mut Grid, qa: &mut Qa) -> bool {
+    if let Some(newqa) = [Qr::S, Qr::SW, Qr::SE]
+        .iter()
+        .filter_map(|qr| (*qa + qr).and_then(|qa| Some(qa).filter(|qa| grid[qa] == Cell::Empty)))
+        .next()
+    {
+        grid[*qa] = Cell::Empty;
+        *qa = newqa;
+        grid[*qa] = Cell::Sand;
+        true
+    } else {
+        false
+    }
 }

@@ -11,14 +11,20 @@ fn process(bufin: impl BufRead) -> Result<usize> {
     let input = parser::parse(bufin)?;
     let mut grid = grid_from_paths(input)?;
     let y_max = grid_y_max_rock(&grid)?;
+    lay_rock(
+        &mut grid,
+        &Qa::try_from((0, y_max + 2)).unwrap(),
+        &Qa::try_from((Qa::WIDTH - 1, y_max + 2)).unwrap(),
+    )?;
+    const SRC: Qa = Qa::new::<500, 0>();
     loop {
-        let mut qa = Qa::new::<500, 0>();
+        let mut qa = SRC;
         let mut moved = true;
         while moved {
-            if qa.tuple().1 > y_max {
-                grid[qa] = Cell::Empty;
+            if grid[SRC] == Cell::Sand {
                 return Ok(grid.iter().filter(|&c| c == &Cell::Sand).count());
             }
+            grid[qa] = Cell::Sand;
             moved = sand_fall(&mut grid, &mut qa);
         }
     }
@@ -26,7 +32,7 @@ fn process(bufin: impl BufRead) -> Result<usize> {
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 24);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 93);
     Ok(())
 }
 
