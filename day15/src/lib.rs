@@ -3,7 +3,7 @@
 // file 'LICENSE', which is part of this source code package.
 
 #[cfg(test)]
-use eyre::Result;
+use color_eyre::Result;
 
 pub const EXAMPLE: &str = "Sensor at x=2, y=18: closest beacon is at x=-2, y=15
 Sensor at x=9, y=16: closest beacon is at x=10, y=16
@@ -54,4 +54,8 @@ pub mod parser {
 fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 14);
     Ok(())
+}
+
+pub fn manhattan_distance(p1: &Xy, p2: &Xy) -> i64 {
+    (p1.0 - p2.0).abs() + (p1.1 - p2.1).abs()
 }

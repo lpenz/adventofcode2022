@@ -2,16 +2,11 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-// use eyre::eyre;
-use eyre::Result;
+use color_eyre::Result;
 use std::collections::BTreeSet;
 use std::io::{stdin, BufRead};
 
 use day15::*;
-
-pub fn manhattan_distance(p1: &Xy, p2: &Xy) -> i64 {
-    (p1.0 - p2.0).abs() + (p1.1 - p2.1).abs()
-}
 
 fn process<const YEVAL: i64>(bufin: impl BufRead) -> Result<usize> {
     let input = parser::parse(bufin)?;

@@ -1,6 +1,7 @@
 #[macro_use]
 pub mod parser {
-    pub use eyre::{eyre, Result};
+    pub use color_eyre::eyre::eyre;
+    pub use color_eyre::Result;
     pub use nom::branch;
     pub use nom::bytes::complete as bytes;
     pub use nom::character::complete as character;
