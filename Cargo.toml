@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "aoc",
     "day00-template",
     "day01",
     "day02",

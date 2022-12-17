@@ -1,10 +1,8 @@
 [package]
-name = "day14"
+name = "aoc"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aoc = { path = "../aoc" }
 eyre = "0.6.8"
 nom = "7.1.1"
-sqrid = "0.0.13"

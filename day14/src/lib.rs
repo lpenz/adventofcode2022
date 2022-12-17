@@ -35,14 +35,7 @@ impl From<Cell> for char {
 }
 
 pub mod parser {
-    use eyre::eyre;
-    use eyre::Result;
-    use nom::bytes::complete as bytes;
-    use nom::character::complete as character;
-    use nom::combinator;
-    use nom::multi;
-    use nom::IResult;
-    use std::io::BufRead;
+    use aoc::parser::*;
 
     use super::*;
 
@@ -61,10 +54,7 @@ pub mod parser {
     }
 
     pub fn parse(mut bufin: impl BufRead) -> Result<Vec<Vec<Qa>>> {
-        let mut input = String::default();
-        bufin.read_to_string(&mut input)?;
-        let result = combinator::all_consuming(multi::many1(path))(&input);
-        Ok(result.map_err(|e| eyre!("error reading input: {:?}", e))?.1)
+        aoc::parse_with!(multi::many1(path), bufin)
     }
 }
 
