@@ -1,0 +1,9 @@
+[package]
+name = "day15"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aoc = { path = "../aoc" }
+eyre = "0.6.8"
+nom = "7.1.1"
