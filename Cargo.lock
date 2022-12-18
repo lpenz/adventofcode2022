@@ -32,6 +32,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
+name = "autofolder"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "168a7c30abf271788d6e825c8b4518010783d6d6b2a97fb5b59f94092c14576e"
+
+[[package]]
 name = "backtrace"
 version = "0.3.67"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -84,6 +90,12 @@ dependencies = [
  "tracing-core",
  "tracing-error",
 ]
+
+[[package]]
+name = "copstr"
+version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "791a14fb92ba731a12ed3651edd9a6d3ab326be54809f18e5bc4c40d9d7255d0"
 
 [[package]]
 name = "crossbeam-channel"
@@ -266,6 +278,17 @@ dependencies = [
  "color-eyre",
  "nom",
  "rayon",
+]
+
+[[package]]
+name = "day16"
+version = "0.1.0"
+dependencies = [
+ "aoc",
+ "autofolder",
+ "color-eyre",
+ "copstr",
+ "nom",
 ]
 
 [[package]]

@@ -1,0 +1,11 @@
+[package]
+name = "day16"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aoc = { path = "../aoc" }
+autofolder = "0.3.0"
+color-eyre = "0.6.2"
+copstr = "0.0.5"
+nom = "7.1.1"
