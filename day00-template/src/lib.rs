@@ -2,8 +2,7 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of this source code package.
 
-#[cfg(test)]
-use eyre::Result;
+pub use color_eyre::{eyre::eyre, Result};
 
 pub const EXAMPLE: &str = "0\n";
 

@@ -145,7 +145,7 @@ name = "day00"
 version = "0.1.0"
 dependencies = [
  "aoc",
- "eyre",
+ "color-eyre",
  "nom",
 ]
 

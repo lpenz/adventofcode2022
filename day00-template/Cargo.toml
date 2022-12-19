@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 aoc = { path = "../aoc" }
-eyre = "0.6.8"
+color-eyre = "0.6.2"
 nom = "7.1.1"
