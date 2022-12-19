@@ -4,31 +4,8 @@
 
 use std::collections::{HashMap, HashSet};
 use std::io::{stdin, BufRead};
-use std::mem;
 
 use day16::*;
-
-fn move_costs_calc(valves: &HashMap<ValveId, Valve>) -> Result<HashMap<(ValveId, ValveId), i32>> {
-    let mut costs = HashMap::<(ValveId, ValveId), i32>::new();
-    for (&vid0, valve0) in valves.iter() {
-        let mut nextfront = valve0.to.clone();
-        let mut cost = 1;
-        let mut visited = HashSet::<ValveId>::new();
-        while !nextfront.is_empty() {
-            let front = mem::take(&mut nextfront);
-            for vid in front {
-                if visited.contains(&vid) {
-                    continue;
-                }
-                costs.insert((vid0, vid), cost);
-                visited.insert(vid);
-                nextfront.extend(valves.get(&vid).unwrap().to.iter());
-            }
-            cost += 1;
-        }
-    }
-    Ok(costs)
-}
 
 fn dfs(
     valves: &HashMap<ValveId, Valve>,

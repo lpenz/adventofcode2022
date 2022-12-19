@@ -4,7 +4,9 @@
 
 pub use color_eyre::eyre::eyre;
 pub use color_eyre::Result;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
+use std::mem;
 
 use copstr::Str;
 
@@ -87,4 +89,28 @@ pub mod parser {
 fn test() -> Result<()> {
     assert_eq!(parser::parse(EXAMPLE.as_bytes())?.len(), 10);
     Ok(())
+}
+
+pub fn move_costs_calc(
+    valves: &HashMap<ValveId, Valve>,
+) -> Result<HashMap<(ValveId, ValveId), i32>> {
+    let mut costs = HashMap::<(ValveId, ValveId), i32>::new();
+    for (&vid0, valve0) in valves.iter() {
+        let mut nextfront = valve0.to.clone();
+        let mut cost = 1;
+        let mut visited = HashSet::<ValveId>::new();
+        while !nextfront.is_empty() {
+            let front = mem::take(&mut nextfront);
+            for vid in front {
+                if visited.contains(&vid) {
+                    continue;
+                }
+                costs.insert((vid0, vid), cost);
+                visited.insert(vid);
+                nextfront.extend(valves.get(&vid).unwrap().to.iter());
+            }
+            cost += 1;
+        }
+    }
+    Ok(costs)
 }
