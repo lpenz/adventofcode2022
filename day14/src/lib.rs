@@ -92,7 +92,7 @@ pub fn lay_rock(g: &mut Grid, src: &Qa, dst: &Qa) -> Result<()> {
 }
 
 pub fn grid_from_paths(paths: Vec<Vec<Qa>>) -> Result<Box<Grid>> {
-    let mut g = Box::new(Grid::default());
+    let mut g = Box::<sqrid::Grid<Cell, 1000, 500, 500000>>::default();
     for path in paths {
         for (i, dst) in path.iter().enumerate().skip(1) {
             lay_rock(&mut g, &path[i - 1], dst)?;
