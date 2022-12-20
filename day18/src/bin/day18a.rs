@@ -12,23 +12,7 @@ fn process(bufin: impl BufRead) -> Result<i32> {
     let cubes = input.into_iter().collect::<HashSet<Xyz>>();
     let mut area = 0;
     for xyz in &cubes {
-        for d in [-1, 1] {
-            let mut neigh = *xyz;
-            neigh.0 += d;
-            if !cubes.contains(&neigh) {
-                area += 1;
-            }
-        }
-        for d in [-1, 1] {
-            let mut neigh = *xyz;
-            neigh.1 += d;
-            if !cubes.contains(&neigh) {
-                area += 1;
-            }
-        }
-        for d in [-1, 1] {
-            let mut neigh = *xyz;
-            neigh.2 += d;
+        for neigh in xyz.iter_neighs() {
             if !cubes.contains(&neigh) {
                 area += 1;
             }
