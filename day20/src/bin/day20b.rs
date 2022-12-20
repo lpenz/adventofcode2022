@@ -7,12 +7,12 @@ use std::io::{stdin, BufRead};
 use day20::*;
 
 fn process(bufin: impl BufRead) -> Result<Num> {
-    do_process::<1, 1>(bufin)
+    do_process::<811589153, 10>(bufin)
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 3);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 1623178306);
     Ok(())
 }
 
