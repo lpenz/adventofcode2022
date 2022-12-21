@@ -11,7 +11,8 @@ Code for the 2022 puzzles at https://adventofcode.com/2022/
 
 Some interesting things that happened on specific days:
 
-...
+- Day 21: part 2 is about inverting operations in an expression tree
+  to find the value of a variable that is deep in a branch.
 
 
 <table><tr>

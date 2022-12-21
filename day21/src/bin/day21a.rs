@@ -6,20 +6,9 @@ use std::io::{stdin, BufRead};
 
 use day21::*;
 
-pub fn solve_monkey(monkeys: &HashMap<MonkeyId, Expr>, m: &MonkeyId) -> i64 {
-    let expr = monkeys.get(m).unwrap();
-    match expr {
-        Expr::Num(num) => *num,
-        Expr::Add(m1, m2) => solve_monkey(monkeys, m1) + solve_monkey(monkeys, m2),
-        Expr::Sub(m1, m2) => solve_monkey(monkeys, m1) - solve_monkey(monkeys, m2),
-        Expr::Mul(m1, m2) => solve_monkey(monkeys, m1) * solve_monkey(monkeys, m2),
-        Expr::Div(m1, m2) => solve_monkey(monkeys, m1) / solve_monkey(monkeys, m2),
-    }
-}
-
 fn process(bufin: impl BufRead) -> Result<i64> {
     let monkeys = parser::parse(bufin)?;
-    Ok(solve_monkey(&monkeys, &MonkeyId::new("root")?))
+    Ok(solve_monkey(&monkeys, &MonkeyId::root()))
 }
 
 #[test]
