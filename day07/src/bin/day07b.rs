@@ -14,8 +14,8 @@ pub fn size_visitor(recentry: &RecEntry, dirsize: &mut HashMap<String, u32>) -> 
         Entry::Dir(ref name) => {
             let size = recentry
                 .children
-                .iter()
-                .map(|(_, e)| size_visitor(e, dirsize))
+                .values()
+                .map(|e| size_visitor(e, dirsize))
                 .sum();
             dirsize.insert(name.to_string(), size);
             size

@@ -13,8 +13,8 @@ fn size_visitor(recentry: &RecEntry, capped: &mut u32) -> u32 {
         Entry::Dir(_) => {
             let size = recentry
                 .children
-                .iter()
-                .map(|(_, e)| size_visitor(e, capped))
+                .values()
+                .map(|e| size_visitor(e, capped))
                 .sum();
             if size < 100000 {
                 *capped += size;

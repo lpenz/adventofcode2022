@@ -84,8 +84,7 @@ pub fn lay_rock(g: &mut Grid, src: &Qa, dst: &Qa) -> Result<()> {
     let mut qa = *src;
     g[qa] = Cell::Rock;
     while let Some(qr) = direction(&qa, dst) {
-        qa = (qa + qr)
-            .ok_or_else(|| eyre!("out-of-bounds, qa {:?}, qr {:?}, dst {:?}", qa, qr, dst))?;
+        qa = (qa + qr)?;
         g[qa] = Cell::Rock;
     }
     Ok(())
@@ -117,7 +116,11 @@ pub fn grid_y_max_rock(g: &Grid) -> Result<u16> {
 pub fn sand_fall(grid: &mut Grid, qa: &mut Qa) -> bool {
     if let Some(newqa) = [Qr::S, Qr::SW, Qr::SE]
         .iter()
-        .filter_map(|qr| (*qa + qr).and_then(|qa| Some(qa).filter(|qa| grid[qa] == Cell::Empty)))
+        .filter_map(|qr| {
+            (*qa + qr)
+                .ok()
+                .and_then(|qa| Some(qa).filter(|qa| grid[qa] == Cell::Empty))
+        })
         .next()
     {
         grid[*qa] = Cell::Empty;

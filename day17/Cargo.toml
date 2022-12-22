@@ -7,4 +7,4 @@ edition = "2021"
 aoc = { path = "../aoc" }
 color-eyre = "0.6.2"
 nom = "7.1.1"
-sqrid = "0.0.13"
+sqrid = "0.0.14"

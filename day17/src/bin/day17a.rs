@@ -66,7 +66,7 @@ impl Shape {
             .0
             .iter()
             .map(|&qa| {
-                if let Some(qa) = qa + qr {
+                if let Ok(qa) = qa + qr {
                     if !grid.contains(&qa) {
                         Ok(qa)
                     } else {

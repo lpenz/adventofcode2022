@@ -99,7 +99,7 @@ pub fn process_moves<const KNOTS: usize>(input: &[Mv]) -> Result<usize> {
             knots[0] = qaqr_resolve(knots[0], mv.qr)?;
             for i in 1..KNOTS {
                 if knots[i - 1] != knots[i]
-                    && !Qr::iter::<true>().any(|d| knots[i - 1] + d == Some(knots[i]))
+                    && !Qr::iter::<true>().any(|d| knots[i - 1] + d == Ok(knots[i]))
                 {
                     let target = knots[i - 1].tuple();
                     let me = knots[i].tuple();

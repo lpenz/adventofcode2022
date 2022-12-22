@@ -8,7 +8,7 @@ use std::io::{stdin, BufRead};
 use day12::*;
 
 pub fn mvok(grid: &Grid, src: Qa, qr: Qr) -> Option<Qa> {
-    let dst = (src + qr)?;
+    let dst = (src + qr).ok()?;
     if (grid[dst] as u8) <= (grid[src] as u8) + 1 {
         Some(dst)
     } else {
