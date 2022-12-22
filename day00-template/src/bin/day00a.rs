@@ -18,6 +18,7 @@ fn test() -> Result<()> {
 }
 
 fn main() -> Result<()> {
+    color_eyre::install()?;
     println!("{}", process(stdin().lock())?);
     Ok(())
 }
