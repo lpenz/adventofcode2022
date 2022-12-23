@@ -1,4 +1,4 @@
-![AoC](https://img.shields.io/badge/AoC%20%E2%AD%90-44-yellow)
+![AoC](https://img.shields.io/badge/AoC%20%E2%AD%90-45-yellow)
 [![CI](https://github.com/lpenz/adventofcode2022/workflows/CI/badge.svg)](https://github.com/lpenz/adventofcode2022/actions)
 [![coveralls](https://coveralls.io/repos/github/lpenz/adventofcode2022/badge.svg?branch=main)](https://coveralls.io/github/lpenz/adventofcode2022?branch=main)
 
@@ -13,6 +13,7 @@ Some interesting things that happened on specific days:
 
 - Day 21: part 2 is about inverting operations in an expression tree
   to find the value of a variable that is deep in a branch.
+- Day 22: part 2 pastes the grid sides on a "dice".
 
 
 <table><tr>
