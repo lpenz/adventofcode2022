@@ -6,14 +6,16 @@ use std::io::{stdin, BufRead};
 
 use day24::*;
 
-fn process(bufin: impl BufRead) -> Result<usize> {
+fn process(bufin: impl BufRead) -> Result<Turn> {
     let input = parser::parse(bufin)?;
-    Ok(input.len())
+    let mut params = Params::new(input)?;
+    // Good ol' BFS
+    params.bfs()
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 6);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 18);
     Ok(())
 }
 
