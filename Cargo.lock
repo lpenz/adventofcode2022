@@ -223,7 +223,7 @@ version = "0.1.0"
 dependencies = [
  "eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -232,7 +232,7 @@ version = "0.1.0"
 dependencies = [
  "eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -249,7 +249,7 @@ version = "0.1.0"
 dependencies = [
  "eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -267,7 +267,7 @@ dependencies = [
  "aoc",
  "eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -299,7 +299,7 @@ dependencies = [
  "aoc",
  "color-eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -349,7 +349,7 @@ dependencies = [
  "aoc",
  "color-eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
 ]
 
 [[package]]
@@ -360,7 +360,17 @@ dependencies = [
  "autofolder",
  "color-eyre",
  "nom",
- "sqrid",
+ "sqrid 0.0.14",
+]
+
+[[package]]
+name = "day24"
+version = "0.1.0"
+dependencies = [
+ "aoc",
+ "color-eyre",
+ "nom",
+ "sqrid 0.0.15",
 ]
 
 [[package]]
@@ -651,6 +661,12 @@ name = "sqrid"
 version = "0.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f4994d208721a7cd5972fa180a6d9904d0abbbd122534db04e37a1ada7a2bde"
+
+[[package]]
+name = "sqrid"
+version = "0.0.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2bdf64f72845b22da1a8fab21084a549c1f0737a65a258f031233eacfa1026c6"
 
 [[package]]
 name = "syn"
