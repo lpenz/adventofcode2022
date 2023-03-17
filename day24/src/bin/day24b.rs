@@ -10,12 +10,15 @@ fn process(bufin: impl BufRead) -> Result<Turn> {
     let input = parser::parse(bufin)?;
     let mut params = Params::new(input)?;
     // Good ol' BFS
-    params.bfs(0, params.start, params.target)
+    let t0 = params.bfs(0, params.start, params.target)?;
+    let t1 = params.bfs(t0, params.target, params.start)?;
+    let t2 = params.bfs(t1, params.start, params.target)?;
+    Ok(t2)
 }
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(EXAMPLE.as_bytes())?, 18);
+    assert_eq!(process(EXAMPLE.as_bytes())?, 54);
     Ok(())
 }
 

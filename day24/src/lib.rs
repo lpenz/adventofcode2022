@@ -245,16 +245,15 @@ impl Params {
         eprintln!("{}", g);
     }
 
-    pub fn bfs(&mut self) -> Result<Turn> {
+    pub fn bfs(&mut self, mut turn: Turn, start: Qa, target: Qa) -> Result<Turn> {
         let mut nextfront = HashSet::<Qa>::default();
-        nextfront.insert(self.start);
-        let mut turn = 0;
+        nextfront.insert(start);
         let mut found = false;
         while !found {
             let front = std::mem::take(&mut nextfront);
             turn += 1;
             for me in &front {
-                if *me == self.target {
+                if *me == target {
                     found = true;
                     break;
                 }
