@@ -19,25 +19,21 @@ pub const EXAMPLE: &str = "1=-0-2
 122
 ";
 
-pub type Snafu = String;
-
 pub mod parser {
     use aoc::parser::*;
-
-    use super::*;
 
     fn snafudigit(input: &str) -> IResult<&str, char> {
         let (input, digit) = character::one_of("210-=")(input)?;
         Ok((input, digit))
     }
 
-    fn line(input: &str) -> IResult<&str, Snafu> {
+    fn line(input: &str) -> IResult<&str, String> {
         let (input, digits) = multi::many1(snafudigit)(input)?;
         let (input, _) = character::newline(input)?;
         Ok((input, digits.into_iter().collect()))
     }
 
-    pub fn parse(mut bufin: impl BufRead) -> Result<Vec<Snafu>> {
+    pub fn parse(mut bufin: impl BufRead) -> Result<Vec<String>> {
         aoc::parse_with!(multi::many1(line), bufin)
     }
 }
