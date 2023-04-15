@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 aoc = { path = "../aoc" }
+autofolder = "0.4.0"
 color-eyre = "0.6.2"
 nom = "7.1.1"
 sqrid = "0.0.14"

@@ -8,11 +8,14 @@ use day17::*;
 
 #[test]
 fn test() -> Result<()> {
-    assert_eq!(process(2022, EXAMPLE.as_bytes())?, 3068);
+    assert_eq!(
+        process(1_000_000_000_000, EXAMPLE.as_bytes())?,
+        1_514_285_714_288
+    );
     Ok(())
 }
 
 fn main() -> Result<()> {
-    println!("{}", process(2022, stdin().lock())?);
+    println!("{}", process(1_000_000_000_000, stdin().lock())?);
     Ok(())
 }

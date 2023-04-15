@@ -297,6 +297,7 @@ name = "day17"
 version = "0.1.0"
 dependencies = [
  "aoc",
+ "autofolder",
  "color-eyre",
  "nom",
  "sqrid 0.0.14",
