@@ -85,7 +85,7 @@ pub fn evaluate_round(elves: &mut HashSet<Qa>, moves: &mut Vec<Qr>) -> Result<bo
                 if elves.contains(&look) {
                     if let Some(mv_qr) = moves.iter().copied().find(|qr| {
                         let mut qr = *qr + Qr::NW;
-                        !(0..3).into_iter().any(|_| {
+                        !(0..3).any(|_| {
                             let look = (*elf + qr).unwrap();
                             qr += Qr::NE;
                             elves.contains(&look)

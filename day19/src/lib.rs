@@ -61,7 +61,6 @@ impl cmp::PartialOrd for Mats {
             .iter()
             .zip(other.0.iter())
             .map(|(a, b)| a.partial_cmp(b))
-            .into_iter()
             .reduce(|prev, current| {
                 if current == Some(Ordering::Equal) || current == prev {
                     prev
