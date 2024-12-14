@@ -20,5 +20,6 @@ Some interesting things that happened on specific days:
 
 <table><tr>
 <td><a href="https://github.com/lpenz/adventofcode2021">:arrow_left: 2021</td>
+<td><a href="https://github.com/lpenz/adventofcode2023">2023 :arrow_right:</td>
 </tr></table>
 
